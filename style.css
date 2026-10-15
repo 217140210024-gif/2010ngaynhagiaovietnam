@@ -6730,7 +6730,13 @@ html.tiny-pc-beauty-v12 #uiverse-starfield #stars3 {
 }
 #tiny-shop-scene .tiny-letter-body {
   font-weight: 400;
-  line-height: 1.75;
+  line-height: 1.5;
+  text-align: justify;
+  text-justify: inter-word;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-sizing: border-box;
+  width: 100%;
 }
 #tiny-shop-scene .tiny-letter-sign { font-style: italic; }
 
