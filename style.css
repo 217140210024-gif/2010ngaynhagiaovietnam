@@ -6729,14 +6729,19 @@ html.tiny-pc-beauty-v12 #uiverse-starfield #stars3 {
   letter-spacing: .01em !important;
 }
 #tiny-shop-scene .tiny-letter-body {
-  font-weight: 400;
-  line-height: 1.75;
-  text-align: justify;
-  text-justify: inter-word;
-  padding-left: 20px;
-  padding-right: 20px;
-  box-sizing: border-box;
-  width: 100%;
+  font-family: "Courier New", Courier, monospace !important;
+font-weight: 400;
+line-height: 1.75;
+letter-spacing: normal !important;
+word-spacing: normal;
+text-align: justify !important;
+text-justify: inter-word;
+width: 100%;
+max-width: 100%;
+box-sizing: border-box;
+padding: 0;
+margin: 0;
+overflow-wrap: break-word;
 }
 #tiny-shop-scene .tiny-letter-sign { font-style: italic; }
 
