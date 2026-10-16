@@ -3620,22 +3620,22 @@ body.luck-scene #khung-mat { z-index: 6; }
         overflow: visible;
     }
     #woman-scene #woman-complete-mobile {
-        display: block;
-        position: absolute;
-        box-sizing: border-box;
-        right: 1vw;
-        bottom: 1.8dvh;
-        height: min(54dvh, 530px);
-        width: auto;
-        max-width: 96vw;
-        object-fit: contain;
-        object-position: center bottom;
-        opacity: 0;
-        transform: translateY(12px) scale(.97);
-        transform-origin: center bottom;
-        transition: opacity 1.7s ease-in-out, transform 2.4s cubic-bezier(.22,1,.36,1);
-        pointer-events: none;
-        filter: drop-shadow(0 0 8px rgba(248,245,255,.12));
+    display: block;
+    position: absolute;
+    box-sizing: border-box;
+    right: 1vw;
+    bottom: 0;
+    height: min(48dvh, 460px);
+    width: auto;
+    max-width: 96vw;
+    object-fit: contain;
+    object-position: center bottom;
+    opacity: 0;
+    transform: translateY(12px) scale(.97);
+    transform-origin: center bottom;
+    transition: opacity 1.7s ease-in-out,
+                transform 2.4s cubic-bezier(.22,1,.36,1);
+    pointer-events: none;
     }
     #woman-scene.hien-thi #woman-complete-mobile {
         opacity: 1;
@@ -6778,7 +6778,10 @@ overflow-wrap: break-word;
 #tiny-shop-scene #shop-tiny-host {
   display: none !important;
 }
+/* SỬA GIAO DIỆN TINY TRÊN ĐIỆN THOẠI */
 @media screen and (max-width: 600px) and (orientation: portrait) {
+
+  /* Xóa nền ảnh riêng phía sau cô gái */
   #woman-scene,
   #woman-scene.hien-thi {
     background: transparent !important;
@@ -6787,6 +6790,7 @@ overflow-wrap: break-word;
     overflow: visible !important;
   }
 
+  /* Ẩn lớp nền phụ */
   #woman-scene::before {
     content: none !important;
     display: none !important;
@@ -6794,6 +6798,7 @@ overflow-wrap: break-word;
     opacity: 0 !important;
   }
 
+  /* Không để nền phụ che hình hai cô gái */
   #woman-complete-mobile {
     background: transparent !important;
     background-image: none !important;
