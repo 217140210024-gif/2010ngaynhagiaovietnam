@@ -6778,23 +6778,24 @@ overflow-wrap: break-word;
 #tiny-shop-scene #shop-tiny-host {
   display: none !important;
 }
-/* Điện thoại: bỏ nền ảnh riêng phía sau cô gái */
-/* Điện thoại: bỏ nền riêng phía sau cô gái, giữ nguyên chuyển động */
-@media screen and (max-width: 600px) and (orientation: portrait) {
-  #woman-scene {
-    background-color: transparent !important;
-    background-image: none !important;
-  }
-
-  #woman-scene::before {
-    background: none !important;
-    opacity: 0 !important;
-  }
-}
 @media screen and (max-width: 600px) and (orientation: portrait) {
   #woman-scene,
   #woman-scene.hien-thi {
+    background: transparent !important;
     background-image: none !important;
     background-color: transparent !important;
-    overflow: visible;
+    overflow: visible !important;
   }
+
+  #woman-scene::before {
+    content: none !important;
+    display: none !important;
+    background: none !important;
+    opacity: 0 !important;
+  }
+
+  #woman-complete-mobile {
+    background: transparent !important;
+    background-image: none !important;
+  }
+}
