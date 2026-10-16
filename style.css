@@ -6780,17 +6780,14 @@ overflow-wrap: break-word;
   display: none !important;
 }
 /* Điện thoại: bỏ nền ảnh riêng phía sau cô gái */
+/* Điện thoại: bỏ nền riêng phía sau cô gái, giữ nguyên chuyển động */
 @media screen and (max-width: 600px) and (orientation: portrait) {
-  #woman-scene,
-  #woman-scene.hien-thi {
-    background-image: none !important;
+  #woman-scene {
     background-color: transparent !important;
-    background-size: initial !important;
-    transform: none !important;
+    background-image: none !important;
   }
 
-  #woman-scene::before,
-  #woman-scene.hien-thi::before {
+  #woman-scene::before {
     background: none !important;
     opacity: 0 !important;
   }
