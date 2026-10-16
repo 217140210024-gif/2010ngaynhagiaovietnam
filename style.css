@@ -3643,9 +3643,8 @@ body.luck-scene #khung-mat { z-index: 6; }
     }
     /* Tâm sáng đỏ đi cùng trái tim được đưa vào đúng khu vực áo. */
     #woman-scene::before {
-        background: radial-gradient(ellipse 54vw 27dvh at 64% 79%,
-            rgba(255,70,75,.26) 0%, rgba(240,35,52,.16) 28%,
-            rgba(215,25,43,.065) 62%, transparent 100%);
+    content: none !important;
+    display: none !important;
     }
 
     /* Cảnh xinh đẹp: vòng sáng ôm Tiny, hoa mọc từ các cạnh. */
@@ -6793,12 +6792,9 @@ overflow-wrap: break-word;
   }
 }
 @media screen and (max-width: 600px) and (orientation: portrait) {
-  #woman-scene::before,
-  #woman-scene.hien-thi::before {
-    content: none !important;
-    display: none !important;
-    background: none !important;
-    box-shadow: none !important;
-    filter: none !important;
+  #woman-scene,
+  #woman-scene.hien-thi {
+    background-image: none !important;
+    background-color: transparent !important;
+    overflow: visible;
   }
-}
