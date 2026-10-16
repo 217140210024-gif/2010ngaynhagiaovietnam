@@ -1,105 +1,100 @@
-/* ===== Tiny visual repair bundle V16 ===== */
+/* Tiny visual repair V17. Loaded AFTER style.css. Does not alter scene progression. */
 
-/* FIX 1: Hose is sized and positioned from the actual nozzle and fuel port by repair.js. */
-#share-flight-device .share-fuel-hose {
-  left: 0 !important;
-  right: auto !important;
-  top: 0 !important;
-  bottom: auto !important;
+/* 1) Hose geometry is measured in repair.js from the tank nozzle to the actual
+   fuel-port circle inside #share-aircraft. Avoid hard-coded right/bottom offsets. */
+.share-fuel-hose {
+  position: absolute;
+  left: 0;
+  right: auto;
+  top: 0;
+  bottom: auto;
   width: 0;
   height: 0;
   overflow: visible;
+  pointer-events: none;
   z-index: 4;
 }
+.share-fuel-hose path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.share-hose-dark { stroke: #0e3654; stroke-width: 15; filter: drop-shadow(0 3px 3px #0007); }
+.share-hose-outline { stroke: #8adfff; stroke-width: 5; opacity: .88; }
+.share-hose-flow { stroke: #ffe7a2; stroke-width: 6; stroke-dasharray: 15 23; opacity: 0; filter: drop-shadow(0 0 6px rgba(255,196,87,.85)); }
+.share-flight-scene-pumping .share-hose-flow { opacity: 1; animation: shareHoseRush .48s linear infinite; }
+@keyframes shareHoseRush { to { stroke-dashoffset: -38; } }
 
-/* FIX 2: The decorative clover in the "may mắn" scene should stand upright. */
-#luck-stage .luck-bg-clover {
+/* 2) Upright clover in the luck scene. The original stylesheet contains older
+   duplicate rules with rotate(90deg), so these final rules intentionally win. */
+#luck-stage .luck-bg-clover,
+#luck-stage.active .luck-bg-clover {
   left: 76% !important;
-  top: 65% !important;
-  width: min(35vw, 300px) !important;
-  transform: translate(-50%, -50%) rotate(0deg) scale(.92) !important;
+  top: 64% !important;
+  width: min(34vw, 290px) !important;
+  transform: translate(-50%, -50%) rotate(0deg) scale(.96) !important;
   transform-origin: 50% 50% !important;
 }
-#luck-stage.active .luck-bg-clover {
-  transform: translate(-50%, -50%) rotate(0deg) scale(1) !important;
-}
 @media (max-width: 700px) and (orientation: portrait) {
-  #luck-stage .luck-bg-clover {
+  #luck-stage .luck-bg-clover,
+  #luck-stage.active .luck-bg-clover {
     left: 76% !important;
-    top: 65% !important;
-    width: min(40vw, 190px) !important;
+    top: 64% !important;
+    width: min(40vw, 185px) !important;
   }
 }
 @media (orientation: landscape) and (max-height: 600px) {
-  #luck-stage .luck-bg-clover {
+  #luck-stage .luck-bg-clover,
+  #luck-stage.active .luck-bg-clover {
     left: 76% !important;
     top: 62% !important;
-    width: min(24vw, 175px) !important;
+    width: min(24vw, 170px) !important;
   }
 }
 
-/* FIX 3: Separate the gift clover from Tiny's eyes and reduce its excessive glow. */
+/* 3) Gift clover stays to the right of Tiny, at a smaller responsive size. */
 #clover-stage .clover-sample-garden {
-  top: 37% !important;
-  right: 3.5% !important;
-  width: clamp(148px, 18vw, 230px) !important;
+  top: 42% !important;
+  right: 4% !important;
+  width: clamp(145px, 17vw, 230px) !important;
 }
 #clover-stage.hien-thi .clover-sample-garden {
-  transform: translateY(-5px) scale(1.01) !important;
+  transform: translateY(-5px) scale(1) !important;
 }
 #clover-stage .clover-sample-glow {
   width: 132% !important;
-  opacity: .62 !important;
+  opacity: .64 !important;
 }
 @media (max-width: 700px) and (orientation: portrait) {
   #clover-stage .clover-sample-garden {
-    top: 51% !important;
-    right: 2.5% !important;
-    width: clamp(120px, 32vw, 152px) !important;
+    top: 52% !important;
+    right: 3% !important;
+    width: clamp(118px, 30vw, 150px) !important;
   }
   #clover-stage.hien-thi .clover-sample-garden {
     transform: translateY(-3px) scale(1) !important;
   }
   #clover-stage .clover-sample-glow {
-    width: 124% !important;
-    opacity: .54 !important;
+    width: 122% !important;
+    opacity: .55 !important;
   }
 }
 @media (max-width: 700px) and (orientation: landscape) {
   #clover-stage .clover-sample-garden {
-    top: 41% !important;
+    top: 40% !important;
     right: 3% !important;
-    width: clamp(105px, 22vw, 150px) !important;
-  }
-  #clover-stage.hien-thi .clover-sample-garden {
-    transform: translateY(-3px) scale(1) !important;
+    width: clamp(105px, 21vw, 150px) !important;
   }
 }
 
-/* Prevent previous wish-scene layers from showing through the dedicated clover scene. */
-body.clover-scene #luck-stage,
-body.clover-scene #luck-front-field,
-body.clover-scene #question-stage,
-body.clover-scene #beauty-stage,
-body.clover-scene #smile-stage,
-body.clover-scene #woman-scene {
+/* 4) Remove the rectangular baked-in video backdrop by showing a chroma-keyed
+   canvas only after its first processed frame is ready. CSS alone cannot remove
+   pixels baked into a video frame; repair.js performs the keying. */
+#smile-stage .waguri-keyed-canvas {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
-}
-body.clover-scene #luck-stage *,
-body.clover-scene #luck-front-field *,
-body.clover-scene #question-stage *,
-body.clover-scene #beauty-stage *,
-body.clover-scene #smile-stage *,
-body.clover-scene #woman-scene * {
-  animation-play-state: paused !important;
-}
-
-/* FIX 4: Hide the teal video only after its transparent canvas replacement is ready. */
-#smile-stage.hien-thi.waguri-frame-visible:not(.waguri-keying) .waguri-keyed-canvas {
-  opacity: 0 !important;
-  visibility: hidden !important;
 }
 #smile-stage.hien-thi.waguri-frame-visible.waguri-keying #waguri-smile-video {
   opacity: 0 !important;
@@ -112,17 +107,13 @@ body.clover-scene #woman-scene * {
   transform: translate3d(0, 0, 0) scale(1) !important;
 }
 
-/* FIX 5: Use the separate transparent PNG on desktop and mobile, not the baked-in
-   WebP rectangle. repair.js corrects the case-sensitive PNG filename. */
+/* 5) Use the transparent PNG on both desktop and mobile. Older desktop rules
+   hid the <img> and used an opaque embedded WebP as the scene background. */
 #woman-scene,
 #woman-scene.hien-thi {
-  position: absolute !important;
-  inset: 0 !important;
   background: transparent !important;
   background-image: none !important;
   background-color: transparent !important;
-  background-size: initial !important;
-  transform: none !important;
   overflow: visible !important;
 }
 #woman-scene::before,
@@ -132,16 +123,6 @@ body.clover-scene #woman-scene * {
   opacity: 0 !important;
   background: none !important;
 }
-#woman-scene {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  transition: opacity .9s ease, visibility 0s linear .9s !important;
-}
-#woman-scene.hien-thi {
-  opacity: 1 !important;
-  visibility: visible !important;
-  transition: opacity .9s ease, visibility 0s linear 0s !important;
-}
 #woman-scene #woman-complete-mobile {
   display: block !important;
   position: absolute !important;
@@ -150,14 +131,15 @@ body.clover-scene #woman-scene * {
   width: auto !important;
   height: min(72vh, 650px) !important;
   max-height: 88% !important;
-  max-width: 40vw !important;
+  max-width: 46vw !important;
   object-fit: contain !important;
   object-position: center bottom !important;
+  background: transparent !important;
   opacity: 0 !important;
   visibility: hidden !important;
   transform: translateY(14px) scale(.98) !important;
   transform-origin: center bottom !important;
-  transition: opacity 1.15s ease, transform 1.25s cubic-bezier(.22, 1, .36, 1) !important;
+  transition: opacity 1.1s ease, transform 1.2s cubic-bezier(.22, 1, .36, 1) !important;
   pointer-events: none !important;
   z-index: 3 !important;
 }
@@ -169,8 +151,8 @@ body.clover-scene #woman-scene * {
 @media (max-width: 650px) {
   #woman-scene #woman-complete-mobile {
     right: 0 !important;
-    height: min(56dvh, 540px) !important;
-    max-height: 82% !important;
-    max-width: 68vw !important;
+    height: min(58dvh, 560px) !important;
+    max-height: 84% !important;
+    max-width: 70vw !important;
   }
 }

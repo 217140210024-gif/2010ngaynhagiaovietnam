@@ -6881,3 +6881,202 @@ overflow-wrap: break-word;
   #woman-scene.hien-thi #woman-complete-mobile { opacity: 1 !important; transform: translateY(0) scale(1) !important; }
   #khung-mat.canh-chuc { transform: translate(-4vw,-16dvh) scale(.93) !important; }
 }
+/* ==========================================
+   MOBILE HARMONY - Cân đối các cảnh trên điện thoại
+   Giữ nguyên JavaScript và hiệu ứng chuyển cảnh
+   ========================================== */
+
+/* Điện thoại dọc */
+@media screen and (max-width: 700px)
+       and (orientation: portrait) {
+
+    /* Giữ kích thước ảnh hai cô gái áo dài làm mốc */
+    :root {
+        --anh-cao: 39dvh;
+    }
+
+    #anh-hai-nguoi {
+        height: var(--anh-cao) !important;
+        max-width: 60vw !important;
+        right: 0 !important;
+        object-fit: contain;
+        object-position: right bottom;
+    }
+
+    /* Thu nhỏ đôi mắt Tiny đồng đều, giữ các hiệu ứng hiện có */
+    #khung-mat {
+        zoom: 0.86;
+    }
+
+    /* Thu nhỏ chữ để phù hợp chiều rộng điện thoại */
+    #text-1 {
+        font-size: clamp(22px, 6.5vw, 32px);
+    }
+
+    #text-2 {
+        font-size: clamp(20px, 6vw, 29px);
+    }
+
+    #text-3 {
+        font-size: clamp(18px, 5vw, 24px);
+    }
+
+    #text-4 {
+        font-size: clamp(20px, 6vw, 29px);
+    }
+
+    #text-5 {
+        font-size: clamp(17px, 4.8vw, 23px);
+        line-height: 1.35;
+    }
+
+    #text-6 {
+        font-size: clamp(19px, 5.3vw, 26px);
+    }
+
+    #text-7 {
+        font-size: clamp(18px, 4.8vw, 23px);
+    }
+
+    #text-8,
+    #text-9,
+    #text-10,
+    #text-11,
+    #text-12,
+    #text-13 {
+        font-size: clamp(17px, 4.6vw, 23px);
+        line-height: 1.4;
+        letter-spacing: 0.5px;
+        padding-inline: 14px;
+        box-sizing: border-box;
+    }
+
+    /* Thu nhỏ hình ảnh lời chúc sức khỏe */
+    #woman-scene #woman-complete-mobile {
+        height: min(42dvh, 350px) !important;
+        max-height: 76% !important;
+        max-width: 70vw !important;
+        right: 1vw !important;
+        object-fit: contain;
+        object-position: center bottom;
+    }
+
+    /* Cảnh chúc xinh đẹp */
+    #beauty-stage .ring {
+        width: 76vw;
+    }
+
+    .wish-floral {
+        width: 28vw;
+        height: 40dvh;
+    }
+
+    .butterfly-wrap {
+        width: 44px;
+    }
+
+    /* Cảnh giữ nụ cười: thu nhỏ nhân vật anime */
+    #smile-stage .waguri-figure {
+        width: clamp(160px, 49vw, 230px);
+        height: auto;
+        max-width: 49vw;
+        right: 0;
+        bottom: 0;
+        object-fit: contain;
+    }
+
+    #smile-stage .waguri-aura {
+        width: 78vw;
+        height: 48dvh;
+        right: -18vw;
+        bottom: -5dvh;
+    }
+
+    #smile-stage .smile-ornament {
+        width: 26vw;
+        height: 30dvh;
+    }
+
+    #smile-stage .tiny-vinyl-scene {
+        width: clamp(72px, 22vw, 110px);
+    }
+
+    /* Cảnh cỏ bốn lá */
+    #clover-stage .clover-halo {
+        width: 62vw;
+        height: 62vw;
+    }
+
+    #clover-stage .clover-aura-ring {
+        width: 40vw;
+        height: 40vw;
+    }
+
+    #clover-stage .lucky-clover {
+        width: min(25vw, 125px);
+    }
+
+    #clover-stage .clover-sample-garden {
+        width: clamp(98px, 27vw, 132px);
+    }
+
+    /* Cảnh may mắn */
+    #luck-stage .luck-bg-clover {
+        width: min(32vw, 160px);
+    }
+
+    /* Thu nhỏ các hiệu ứng trang trí trong cảnh cuối máy bay */
+    #share-flight-scene .share-flight-heading h2 {
+        font-size: clamp(20px, 5vw, 28px);
+    }
+
+    #share-flight-scene .share-flight-device {
+        width: min(90vw, 450px);
+        height: clamp(180px, 30dvh, 235px);
+    }
+}
+
+/* Điện thoại xoay ngang */
+@media screen and (max-width: 900px)
+       and (orientation: landscape)
+       and (pointer: coarse) {
+
+    #khung-mat {
+        zoom: 0.78;
+    }
+
+    #anh-hai-nguoi {
+        height: 34dvh !important;
+        max-width: 34vw !important;
+    }
+
+    #woman-scene #woman-complete-mobile {
+        height: 40dvh !important;
+        max-width: 30vw !important;
+    }
+
+    #smile-stage .waguri-figure {
+        height: 68dvh;
+        width: auto;
+        max-width: 30vw;
+    }
+
+    #smile-stage .waguri-aura {
+        width: 52vw;
+        height: 65dvh;
+    }
+
+    .wish-floral {
+        width: 23vw;
+        height: 36dvh;
+    }
+
+    #clover-stage .clover-sample-garden {
+        width: clamp(85px, 18vw, 120px);
+    }
+
+    #share-flight-scene .share-flight-device {
+        width: min(84vw, 420px);
+        height: clamp(160px, 34dvh, 205px);
+    }
+}
