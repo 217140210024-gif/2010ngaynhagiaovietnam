@@ -1,0 +1,176 @@
+/* ===== Tiny visual repair bundle V16 ===== */
+
+/* FIX 1: Hose is sized and positioned from the actual nozzle and fuel port by repair.js. */
+#share-flight-device .share-fuel-hose {
+  left: 0 !important;
+  right: auto !important;
+  top: 0 !important;
+  bottom: auto !important;
+  width: 0;
+  height: 0;
+  overflow: visible;
+  z-index: 4;
+}
+
+/* FIX 2: The decorative clover in the "may mắn" scene should stand upright. */
+#luck-stage .luck-bg-clover {
+  left: 76% !important;
+  top: 65% !important;
+  width: min(35vw, 300px) !important;
+  transform: translate(-50%, -50%) rotate(0deg) scale(.92) !important;
+  transform-origin: 50% 50% !important;
+}
+#luck-stage.active .luck-bg-clover {
+  transform: translate(-50%, -50%) rotate(0deg) scale(1) !important;
+}
+@media (max-width: 700px) and (orientation: portrait) {
+  #luck-stage .luck-bg-clover {
+    left: 76% !important;
+    top: 65% !important;
+    width: min(40vw, 190px) !important;
+  }
+}
+@media (orientation: landscape) and (max-height: 600px) {
+  #luck-stage .luck-bg-clover {
+    left: 76% !important;
+    top: 62% !important;
+    width: min(24vw, 175px) !important;
+  }
+}
+
+/* FIX 3: Separate the gift clover from Tiny's eyes and reduce its excessive glow. */
+#clover-stage .clover-sample-garden {
+  top: 37% !important;
+  right: 3.5% !important;
+  width: clamp(148px, 18vw, 230px) !important;
+}
+#clover-stage.hien-thi .clover-sample-garden {
+  transform: translateY(-5px) scale(1.01) !important;
+}
+#clover-stage .clover-sample-glow {
+  width: 132% !important;
+  opacity: .62 !important;
+}
+@media (max-width: 700px) and (orientation: portrait) {
+  #clover-stage .clover-sample-garden {
+    top: 51% !important;
+    right: 2.5% !important;
+    width: clamp(120px, 32vw, 152px) !important;
+  }
+  #clover-stage.hien-thi .clover-sample-garden {
+    transform: translateY(-3px) scale(1) !important;
+  }
+  #clover-stage .clover-sample-glow {
+    width: 124% !important;
+    opacity: .54 !important;
+  }
+}
+@media (max-width: 700px) and (orientation: landscape) {
+  #clover-stage .clover-sample-garden {
+    top: 41% !important;
+    right: 3% !important;
+    width: clamp(105px, 22vw, 150px) !important;
+  }
+  #clover-stage.hien-thi .clover-sample-garden {
+    transform: translateY(-3px) scale(1) !important;
+  }
+}
+
+/* Prevent previous wish-scene layers from showing through the dedicated clover scene. */
+body.clover-scene #luck-stage,
+body.clover-scene #luck-front-field,
+body.clover-scene #question-stage,
+body.clover-scene #beauty-stage,
+body.clover-scene #smile-stage,
+body.clover-scene #woman-scene {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+body.clover-scene #luck-stage *,
+body.clover-scene #luck-front-field *,
+body.clover-scene #question-stage *,
+body.clover-scene #beauty-stage *,
+body.clover-scene #smile-stage *,
+body.clover-scene #woman-scene * {
+  animation-play-state: paused !important;
+}
+
+/* FIX 4: Hide the teal video only after its transparent canvas replacement is ready. */
+#smile-stage.hien-thi.waguri-frame-visible:not(.waguri-keying) .waguri-keyed-canvas {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+#smile-stage.hien-thi.waguri-frame-visible.waguri-keying #waguri-smile-video {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: none !important;
+}
+#smile-stage.hien-thi.waguri-frame-visible.waguri-keying .waguri-keyed-canvas {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translate3d(0, 0, 0) scale(1) !important;
+}
+
+/* FIX 5: Use the separate transparent PNG on desktop and mobile, not the baked-in
+   WebP rectangle. repair.js corrects the case-sensitive PNG filename. */
+#woman-scene,
+#woman-scene.hien-thi {
+  position: absolute !important;
+  inset: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
+  background-size: initial !important;
+  transform: none !important;
+  overflow: visible !important;
+}
+#woman-scene::before,
+#woman-scene::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: none !important;
+}
+#woman-scene {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity .9s ease, visibility 0s linear .9s !important;
+}
+#woman-scene.hien-thi {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transition: opacity .9s ease, visibility 0s linear 0s !important;
+}
+#woman-scene #woman-complete-mobile {
+  display: block !important;
+  position: absolute !important;
+  right: clamp(8px, 2vw, 28px) !important;
+  bottom: 0 !important;
+  width: auto !important;
+  height: min(72vh, 650px) !important;
+  max-height: 88% !important;
+  max-width: 40vw !important;
+  object-fit: contain !important;
+  object-position: center bottom !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: translateY(14px) scale(.98) !important;
+  transform-origin: center bottom !important;
+  transition: opacity 1.15s ease, transform 1.25s cubic-bezier(.22, 1, .36, 1) !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+}
+#woman-scene.hien-thi #woman-complete-mobile {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) scale(1) !important;
+}
+@media (max-width: 650px) {
+  #woman-scene #woman-complete-mobile {
+    right: 0 !important;
+    height: min(56dvh, 540px) !important;
+    max-height: 82% !important;
+    max-width: 68vw !important;
+  }
+}
