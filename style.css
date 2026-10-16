@@ -6792,3 +6792,13 @@ overflow-wrap: break-word;
     opacity: 0 !important;
   }
 }
+@media screen and (max-width: 600px) and (orientation: portrait) {
+  #woman-scene::before,
+  #woman-scene.hien-thi::before {
+    content: none !important;
+    display: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+  }
+}
