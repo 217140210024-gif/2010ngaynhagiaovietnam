@@ -6779,3 +6779,19 @@ overflow-wrap: break-word;
 #tiny-shop-scene #shop-tiny-host {
   display: none !important;
 }
+/* Điện thoại: bỏ nền ảnh riêng phía sau cô gái */
+@media screen and (max-width: 600px) and (orientation: portrait) {
+  #woman-scene,
+  #woman-scene.hien-thi {
+    background-image: none !important;
+    background-color: transparent !important;
+    background-size: initial !important;
+    transform: none !important;
+  }
+
+  #woman-scene::before,
+  #woman-scene.hien-thi::before {
+    background: none !important;
+    opacity: 0 !important;
+  }
+}
