@@ -295,14 +295,13 @@ const text1 = document.getElementById('text-1');
         // Chuyển cảnh: click chuột trên PC hoặc chạm màn hình trên mobile
         function chuyenCanh() {
             {
-                if (!canClick) return;
-                // Gọi play() ngay trong tương tác để Chrome cho phép âm thanh.
-                startMusicIfAllowed();
-                // Không được bỏ qua 9,7 giây đầu dù click nhiều lần.
-                if (clickCount === 2 && (!musicGateClosed || tinySoundtrack.currentTime < MUSIC_HOLD_TIME - .045)) {
-                    showMusicWaitHint();
-                    return;
-                }
+              if (!canClick) {
+            // Ghi nhận lần bấm trong lúc cảnh sức khỏe còn đang chuyển động.
+             if (activeWish === 'health' && clickCount === 6) {
+                pendingHealthAdvance = true;
+             }
+             return;
+            }
                 if (clickCount === 2) resumeMusicAtBeauty();
                 hideIntroNudge();
 
@@ -537,14 +536,18 @@ const text1 = document.getElementById('text-1');
             // Sau khi mắt vuông mở xong, chớp nhẹ thỉnh thoảng. Click tiếp sang lời chúc mới.
             activeWish = 'health';
             setTimeout(() => {
-                if (activeWish !== 'health') return;
-                phaiMat.style.animation = 'none';
-                phaiMat.style.transform = 'scaleY(1)';
-                canClick = true;
-                henChopMat();
+                 if (activeWish !== 'health') return;
+                 phaiMat.style.animation = 'none';
+                 phaiMat.style.transform = 'scaleY(1)';
+                 canClick = true;
+                 henChopMat();
+
+                 if (pendingHealthAdvance) {
+                    pendingHealthAdvance = false;
+                    requestAnimationFrame(() => chuyenCanh());
+                }
             }, 990);
         }
-
         // Lịch chớp mắt tự nhiên, dừng sạch khi chuyển cảnh.
         function henChopMat() {
             const token = ++wishBlinkToken;
@@ -2805,9 +2808,15 @@ const SPRITES = [taoSprite(1.02, 140), taoSprite(.96, 136), taoSprite(1.08, 145)
             !!target.closest('a, button, input, textarea, select, summary, [role="button"], [contenteditable="true"]');
 
         document.addEventListener('click', function(event) {
-            if (tinyIsControl(event.target)) return;
-            if (document.getElementById('shop-product-modal')?.classList.contains('show')) return;
-            chuyenCanh();
+         if (document.getElementById('shop-product-modal')?.classList.contains('show')) return;
+
+         // Ở cảnh sức khỏe, cho phép bấm để chuyển sang cảnh tiếp theo.
+        const healthSceneVisible = document.getElementById('text-7')
+            ?.classList.contains('hien-thi');
+
+        if (!healthSceneVisible && tinyIsControl(event.target)) return;
+
+        chuyenCanh();
         }, true);
 
         function khoiDongLaVang() {
