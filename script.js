@@ -238,6 +238,7 @@ const text1 = document.getElementById('text-1');
 
         let clickCount = 0;
         let animationStarted = false;
+        let pendingHealthAdvance = false;
         // Gợi ý xuất hiện khi nhạc đầu đã nghe đủ 9,7 giây, người xem chờ thêm 2s
         // ở một trong ba cảnh mở đầu, kể cả cảnh nhận lệnh từ Dr D. Không dựa trên thời gian mở trang.
         const introNudge = document.getElementById('tiny-intro-nudge');
@@ -2798,15 +2799,16 @@ const SPRITES = [taoSprite(1.02, 140), taoSprite(.96, 136), taoSprite(1.08, 145)
             });
         });
 
-        // Cả PC và điện thoại: click/chạm vào nền để chuyển cảnh.
-        // Giữ nguyên hành vi của các nút mua, liên kết và hộp thoại.
+        // Bắt click ở pha capture để hạn chế thành phần khác chặn chuyển cảnh.
+        // Vẫn bỏ qua nút, liên kết và hộp thoại như trước.
         const tinyIsControl = target => target instanceof Element &&
             !!target.closest('a, button, input, textarea, select, summary, [role="button"], [contenteditable="true"]');
+
         document.addEventListener('click', function(event) {
             if (tinyIsControl(event.target)) return;
             if (document.getElementById('shop-product-modal')?.classList.contains('show')) return;
             chuyenCanh();
-        });
+        }, true);
 
         function khoiDongLaVang() {
             const ctx = laCanvas.getContext('2d');
