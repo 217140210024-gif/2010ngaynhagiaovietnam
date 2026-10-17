@@ -4001,3 +4001,284 @@ if(window.TINY_PERF && !window.TINY_PERF.mobile){
     if (caption) caption.textContent = isOpen ? 'Nhấn thêm lần nữa để gấp thư lại' : 'Nhấn vào lá thư để mở nhé 💌';
   });
 })();
+
+/* ===== Tiny consolidated fixes: geometry-based fuel hose and isolated video chroma key ===== */
+(() => {
+  'use strict';
+
+  const onReady = (callback) => {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', callback, { once: true });
+    } else {
+      callback();
+    }
+  };
+
+  onReady(() => {
+    /* Connect the hose to measured elements, not guessed CSS offsets. */
+    const device = document.getElementById('share-flight-device');
+    const hose = device?.querySelector('.share-fuel-hose');
+    const nozzle = device?.querySelector('.share-fuel-nozzle');
+    const plane = document.getElementById('share-aircraft');
+    const port = plane?.querySelector('.share-fuel-port');
+
+    if (device && hose && nozzle && plane && port) {
+      const paths = Array.from(hose.querySelectorAll('path'));
+      let queued = false;
+      let previous = '';
+
+      const updateHose = () => {
+        queued = false;
+        const d = device.getBoundingClientRect();
+        const n = nozzle.getBoundingClientRect();
+        const p = port.getBoundingClientRect();
+        if (d.width < 1 || d.height < 1 || n.width < 1 || p.width < 1) return;
+
+        const x0 = n.right - d.left - Math.max(1, n.width * .08);
+        const y0 = n.top + n.height * .5 - d.top;
+        const x1 = p.left + p.width * .5 - d.left;
+        const y1 = p.top + p.height * .5 - d.top;
+        const width = x1 - x0;
+        if (width < 24) return;
+
+        const top = Math.min(y0, y1) - 12;
+        const slack = Math.max(28, Math.min(52, width * .12));
+        const bottom = Math.max(y0, y1) + slack;
+        const height = Math.max(48, bottom - top);
+        const key = [x0, y0, x1, y1, d.width, d.height]
+          .map(v => Math.round(v * 10) / 10).join('|');
+        if (key === previous) return;
+        previous = key;
+
+        hose.style.left = x0 + 'px';
+        hose.style.top = top + 'px';
+        hose.style.right = 'auto';
+        hose.style.bottom = 'auto';
+        hose.style.width = width + 'px';
+        hose.style.height = height + 'px';
+        hose.setAttribute('viewBox', '0 0 100 100');
+        hose.setAttribute('preserveAspectRatio', 'none');
+
+        const yStart = Math.max(2, Math.min(96, (y0 - top) / height * 100));
+        const yEnd = Math.max(2, Math.min(96, (y1 - top) / height * 100));
+        const base = Math.max(yStart, yEnd);
+        const sag = Math.min(95, base + Math.max(13, (100 - base) * .48));
+        const path = 'M 0 ' + yStart.toFixed(2) +
+          ' C 18 ' + yStart.toFixed(2) + ', 20 ' + sag.toFixed(2) +
+          ', 46 ' + sag.toFixed(2) + ' S 80 ' + yEnd.toFixed(2) +
+          ', 100 ' + yEnd.toFixed(2);
+        paths.forEach(el => el.setAttribute('d', path));
+      };
+
+      const requestUpdate = () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(updateHose);
+      };
+      requestUpdate();
+      [120, 400, 900].forEach(ms => setTimeout(requestUpdate, ms));
+      window.addEventListener('resize', requestUpdate, { passive: true });
+      window.addEventListener('orientationchange', requestUpdate, { passive: true });
+      if ('ResizeObserver' in window) {
+        const observer = new ResizeObserver(requestUpdate);
+        [device, nozzle, plane, port].forEach(el => observer.observe(el));
+      }
+      const scene = document.getElementById('share-flight-scene');
+      if (scene && 'MutationObserver' in window) {
+        new MutationObserver(() => {
+          previous = '';
+          requestUpdate();
+          setTimeout(requestUpdate, 350);
+        }).observe(scene, { attributes: true, attributeFilter: ['class'] });
+      }
+    } else {
+      console.warn('[Tiny fix] Hose elements are incomplete; keeping the original fallback hose.');
+    }
+
+    /* Remove only pixels connected to the video frame edge that match its backdrop. */
+    const stage = document.getElementById('smile-stage');
+    const video = document.getElementById('waguri-smile-video');
+    if (!stage || !video || !video.parentElement || stage.dataset.tinyKeyingReady === '1') return;
+    stage.dataset.tinyKeyingReady = '1';
+
+    const canvas = document.createElement('canvas');
+    canvas.className = 'waguri-figure waguri-keyed-canvas';
+    canvas.setAttribute('aria-hidden', 'true');
+    canvas.tabIndex = -1;
+    canvas.style.aspectRatio = '408 / 540';
+    video.insertAdjacentElement('afterend', canvas);
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    if (!ctx) {
+      canvas.remove();
+      return;
+    }
+
+    let pending = false;
+    let handle = 0;
+    let handleKind = '';
+    let lastTime = -1;
+    let workWidth = 0;
+    let workHeight = 0;
+    let visited = new Uint8Array(0);
+    let queue = new Int32Array(0);
+
+    const sceneIsActive = () => !document.hidden &&
+      stage.classList.contains('hien-thi') &&
+      stage.classList.contains('waguri-frame-visible') &&
+      video.readyState >= 2 && video.videoWidth > 0 && video.videoHeight > 0;
+
+    const distance = (r, g, b, cr, cg, cb) => {
+      const dr = r - cr, dg = g - cg, db = b - cb;
+      return Math.sqrt(dr * dr + dg * dg + db * db);
+    };
+
+    function keyCurrentFrame() {
+      if (!sceneIsActive()) return false;
+      const w = Math.min(192, video.videoWidth);
+      const h = Math.max(1, Math.round(video.videoHeight * w / video.videoWidth));
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+        canvas.style.aspectRatio = w + ' / ' + h;
+      }
+      const total = w * h;
+      if (workWidth !== w || workHeight !== h) {
+        workWidth = w;
+        workHeight = h;
+        visited = new Uint8Array(total);
+        queue = new Int32Array(total);
+      }
+      ctx.drawImage(video, 0, 0, w, h);
+      let image;
+      try {
+        image = ctx.getImageData(0, 0, w, h);
+      } catch (error) {
+        console.warn('[Tiny fix] Video frame cannot be read for background keying.', error);
+        return false;
+      }
+
+      const pixels = image.data;
+      const bins = new Map();
+      const sampleBorder = (x, y) => {
+        const i = (y * w + x) * 4;
+        const r = pixels[i], g = pixels[i + 1], b = pixels[i + 2];
+        const bin = ((r >> 4) << 8) | ((g >> 4) << 4) | (b >> 4);
+        const item = bins.get(bin) || { count: 0, r: 0, g: 0, b: 0 };
+        item.count++;
+        item.r += r; item.g += g; item.b += b;
+        bins.set(bin, item);
+      };
+      const step = Math.max(1, Math.floor(Math.min(w, h) / 120));
+      for (let x = 0; x < w; x += step) {
+        sampleBorder(x, 0);
+        sampleBorder(x, h - 1);
+      }
+      for (let y = step; y < h - 1; y += step) {
+        sampleBorder(0, y);
+        sampleBorder(w - 1, y);
+      }
+      let mode = null;
+      for (const item of bins.values()) {
+        if (!mode || item.count > mode.count) mode = item;
+      }
+      if (!mode || mode.count < 2) return false;
+      const cr = mode.r / mode.count;
+      const cg = mode.g / mode.count;
+      const cb = mode.b / mode.count;
+
+      visited.fill(0);
+      let head = 0, tail = 0;
+      const queueIfBackdrop = index => {
+        if (visited[index]) return;
+        visited[index] = 1;
+        const i = index * 4;
+        if (distance(pixels[i], pixels[i + 1], pixels[i + 2], cr, cg, cb) <= 70) {
+          queue[tail++] = index;
+        }
+      };
+      for (let x = 0; x < w; x++) {
+        queueIfBackdrop(x);
+        queueIfBackdrop((h - 1) * w + x);
+      }
+      for (let y = 1; y < h - 1; y++) {
+        queueIfBackdrop(y * w);
+        queueIfBackdrop(y * w + w - 1);
+      }
+      while (head < tail) {
+        const index = queue[head++];
+        const i = index * 4;
+        const dist = distance(pixels[i], pixels[i + 1], pixels[i + 2], cr, cg, cb);
+        if (dist <= 27) pixels[i + 3] = 0;
+        else if (dist < 70) {
+          pixels[i + 3] = Math.round(pixels[i + 3] * ((dist - 27) / 43));
+        }
+        const x = index % w, y = Math.floor(index / w);
+        if (x > 0) queueIfBackdrop(index - 1);
+        if (x + 1 < w) queueIfBackdrop(index + 1);
+        if (y > 0) queueIfBackdrop(index - w);
+        if (y + 1 < h) queueIfBackdrop(index + w);
+      }
+
+      ctx.putImageData(image, 0, 0);
+      return true;
+    }
+
+    function cancelFrame() {
+      if (!pending) return;
+      if (handleKind === 'video' && typeof video.cancelVideoFrameCallback === 'function') {
+        video.cancelVideoFrameCallback(handle);
+      } else if (handleKind === 'raf') {
+        cancelAnimationFrame(handle);
+      }
+      pending = false;
+      handle = 0;
+      handleKind = '';
+    }
+
+    function renderFrame() {
+      pending = false;
+      handle = 0;
+      handleKind = '';
+      if (!sceneIsActive()) {
+        stage.classList.remove('waguri-keying');
+        return;
+      }
+      if (video.currentTime !== lastTime && keyCurrentFrame()) {
+        lastTime = video.currentTime;
+        stage.classList.add('waguri-keying');
+      }
+      scheduleFrame();
+    }
+
+    function scheduleFrame() {
+      if (pending || !sceneIsActive()) return;
+      pending = true;
+      if (typeof video.requestVideoFrameCallback === 'function') {
+        handleKind = 'video';
+        handle = video.requestVideoFrameCallback(renderFrame);
+      } else {
+        handleKind = 'raf';
+        handle = requestAnimationFrame(renderFrame);
+      }
+    }
+
+    function syncScene() {
+      if (sceneIsActive()) {
+        scheduleFrame();
+      } else {
+        cancelFrame();
+        lastTime = -1;
+        stage.classList.remove('waguri-keying');
+      }
+    }
+
+    video.addEventListener('loadeddata', syncScene);
+    video.addEventListener('playing', syncScene);
+    video.addEventListener('timeupdate', syncScene);
+    document.addEventListener('visibilitychange', syncScene);
+    new MutationObserver(syncScene).observe(stage, {
+      attributes: true, attributeFilter: ['class']
+    });
+  });
+})();
+

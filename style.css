@@ -7080,3 +7080,171 @@ overflow-wrap: break-word;
         height: clamp(160px, 34dvh, 205px);
     }
 }
+
+/* ===== Tiny fixes consolidated into the main stylesheet ===== */
+/* Use the real transparent PNG for the health wish on desktop and mobile. */
+#woman-scene,
+#woman-scene.hien-thi {
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
+  overflow: visible !important;
+}
+#woman-scene::before,
+#woman-scene::after {
+  content: none !important;
+  display: none !important;
+}
+#woman-scene #woman-complete-mobile {
+  display: block !important;
+  position: absolute !important;
+  right: clamp(0px, 1.5vw, 20px) !important;
+  bottom: 0 !important;
+  width: auto !important;
+  height: min(72vh, 650px) !important;
+  max-height: 88% !important;
+  max-width: 46vw !important;
+  object-fit: contain !important;
+  object-position: center bottom !important;
+  background: transparent !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: translateY(14px) scale(.98) !important;
+  transform-origin: center bottom !important;
+  transition: opacity 1.1s ease, transform 1.2s cubic-bezier(.22,1,.36,1) !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+}
+#woman-scene.hien-thi #woman-complete-mobile {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) scale(1) !important;
+}
+
+/* Keep the large lucky clover upright; the older 90deg rule made it lie sideways. */
+#luck-stage .luck-bg-clover {
+  left: 76% !important;
+  top: 64% !important;
+  transform: translate(-50%, -50%) rotate(0deg) scale(.96) !important;
+  transform-origin: 50% 50% !important;
+}
+#luck-stage.active .luck-bg-clover {
+  transform: translate(-50%, -50%) rotate(0deg) scale(1) !important;
+}
+
+/* Hose geometry is measured from the real nozzle to the actual SVG fuel-port. */
+.share-fuel-hose {
+  overflow: visible !important;
+  pointer-events: none !important;
+  z-index: 4 !important;
+}
+.share-fuel-hose path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* The keyed canvas replaces only the solid background baked into Waguri's video. */
+#smile-stage .waguri-keyed-canvas {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+#smile-stage.hien-thi.waguri-frame-visible.waguri-keying #waguri-smile-video {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: none !important;
+}
+#smile-stage.hien-thi.waguri-frame-visible.waguri-keying .waguri-keyed-canvas {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translate3d(0, 0, 0) scale(1) !important;
+}
+
+/* Phone portrait: smaller decorative scenes and move the gift plant below Tiny's eyes. */
+@media screen and (max-width: 700px) and (orientation: portrait) {
+  #woman-scene #woman-complete-mobile {
+    height: min(42dvh, 350px) !important;
+    max-height: 76% !important;
+    max-width: 70vw !important;
+    right: 1vw !important;
+  }
+  #beauty-stage .ring { width: 72vw !important; }
+  #beauty-stage .wish-floral { width: 24vw !important; height: 36dvh !important; }
+  .butterfly-wrap { width: 38px !important; }
+  #smile-stage .waguri-figure {
+    width: min(44vw, 170px) !important;
+    height: auto !important;
+    max-width: 44vw !important;
+    max-height: 43dvh !important;
+    right: 0 !important;
+    bottom: 0 !important;
+  }
+  #smile-stage .waguri-aura {
+    width: 68vw !important;
+    height: 40dvh !important;
+    right: -12vw !important;
+    bottom: -3dvh !important;
+  }
+  #smile-stage .smile-ornament { width: 22vw !important; height: 26dvh !important; }
+  #smile-stage .tiny-vinyl-scene { width: min(22vw, 92px) !important; }
+  #clover-stage .clover-sample-garden {
+    top: 62% !important;
+    right: 1.5% !important;
+    width: clamp(88px, 24vw, 118px) !important;
+  }
+  #clover-stage .clover-sample-glow { width: 128% !important; opacity: .5 !important; }
+  #luck-stage .luck-bg-clover {
+    left: 76% !important;
+    top: 64% !important;
+    width: min(30vw, 125px) !important;
+    transform: translate(-50%, -50%) rotate(0deg) scale(.88) !important;
+  }
+  #luck-stage.active .luck-bg-clover {
+    transform: translate(-50%, -50%) rotate(0deg) scale(.94) !important;
+  }
+  #share-flight-scene .share-flight-device {
+    width: min(88vw, 410px) !important;
+    height: clamp(170px, 28dvh, 215px) !important;
+  }
+}
+
+/* Phone landscape. Desktop scene sizes remain unchanged. */
+@media screen and (max-width: 900px) and (orientation: landscape) and (pointer: coarse) {
+  #woman-scene #woman-complete-mobile {
+    height: 40dvh !important;
+    max-width: 30vw !important;
+    right: 0 !important;
+  }
+  #smile-stage .waguri-figure {
+    width: min(26vw, 175px) !important;
+    height: auto !important;
+    max-width: 26vw !important;
+    max-height: 58dvh !important;
+    right: 0 !important;
+    bottom: 0 !important;
+  }
+  #smile-stage .waguri-aura { width: 48vw !important; height: 58dvh !important; }
+  #clover-stage .clover-sample-garden {
+    top: 59% !important;
+    right: 1.5% !important;
+    width: clamp(82px, 19vw, 118px) !important;
+  }
+  #clover-stage .clover-sample-glow { width: 128% !important; opacity: .5 !important; }
+  #luck-stage .luck-bg-clover {
+    left: 76% !important;
+    top: 64% !important;
+    width: min(23vw, 150px) !important;
+    transform: translate(-50%, -50%) rotate(0deg) scale(.9) !important;
+  }
+  #luck-stage.active .luck-bg-clover {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1) !important;
+  }
+  #share-flight-scene .share-flight-device {
+    width: min(84vw, 400px) !important;
+    height: clamp(155px, 33dvh, 205px) !important;
+  }
+}
+/* ===== End consolidated Tiny fixes ===== */
