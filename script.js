@@ -536,16 +536,16 @@ const text1 = document.getElementById('text-1');
             // Sau khi mắt vuông mở xong, chớp nhẹ thỉnh thoảng. Click tiếp sang lời chúc mới.
             activeWish = 'health';
             setTimeout(() => {
-                 if (activeWish !== 'health') return;
-                 phaiMat.style.animation = 'none';
-                 phaiMat.style.transform = 'scaleY(1)';
-                 canClick = true;
-                 henChopMat();
+                if (activeWish !== 'health') return;
+                    phaiMat.style.animation = 'none';
+                    phaiMat.style.transform = 'scaleY(1)';
+                     canClick = true;
+                     henChopMat();
 
-                 if (pendingHealthAdvance) {
-                    pendingHealthAdvance = false;
-                    requestAnimationFrame(() => chuyenCanh());
-                }
+                    if (pendingHealthAdvance) {
+                        pendingHealthAdvance = false;
+                        requestAnimationFrame(() => chuyenCanh());
+                     }
             }, 990);
         }
         // Lịch chớp mắt tự nhiên, dừng sạch khi chuyển cảnh.
