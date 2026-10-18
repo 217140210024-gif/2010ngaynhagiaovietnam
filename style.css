@@ -6894,3 +6894,19 @@ html.tiny-mobile #woman-scene.hien-thi {
         max-width: 38vw !important;
     }
 }
+
+
+/* Mobile-safe Waguri fallback: transparent PNG with subtle motion, no video compositor. */
+#smile-stage .waguri-figure {
+    mix-blend-mode: normal !important;
+    background: transparent !important;
+    animation: waguriGentleFloat 4.8s ease-in-out infinite;
+    will-change: translate;
+}
+@keyframes waguriGentleFloat {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -7px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    #smile-stage .waguri-figure { animation: none !important; }
+}
