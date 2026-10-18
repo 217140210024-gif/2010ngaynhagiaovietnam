@@ -1037,6 +1037,11 @@ const text1 = document.getElementById('text-1');
                 waguriSmile.setAttribute('x5-video-player-type', 'h5');
                 waguriSmile.setAttribute('x5-video-player-fullscreen', 'false');
                 waguriSmile.playsInline = true;
+                // Avoid mobile browsers forcing a separate native video layer/fullscreen.
+                waguriSmile.removeAttribute('controls');
+                waguriSmile.setAttribute('disableRemotePlayback', '');
+                waguriSmile.setAttribute('preload', 'auto');
+                waguriSmile.setAttribute('autoplay', '');
                 waguriSmile.muted = true;
                 waguriSmile.loop = true;
                 waguriSmile.controls = false;
