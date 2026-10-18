@@ -6910,3 +6910,35 @@ html.tiny-mobile #woman-scene.hien-thi {
 @media (prefers-reduced-motion: reduce) {
     #smile-stage .waguri-figure { animation: none !important; }
 }
+
+/* Waguri full-body PNG: size and anchor tuned to keep the whole character visible. */
+#smile-stage .waguri-figure {
+    height: min(86vh, 860px) !important;
+    width: auto !important;
+    max-width: 48vw !important;
+    aspect-ratio: auto !important;
+    object-fit: contain !important;
+    object-position: center bottom !important;
+    right: 0 !important;
+    bottom: -0.5vh !important;
+}
+@media (max-width: 700px) {
+    #smile-stage .waguri-figure {
+        height: min(76dvh, 680px) !important;
+        width: auto !important;
+        max-width: 62vw !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        object-fit: contain !important;
+        object-position: center bottom !important;
+    }
+}
+@media screen and (orientation: landscape) and (max-height: 600px) and (pointer: coarse) {
+    #smile-stage .waguri-figure {
+        height: 84dvh !important;
+        max-width: 42vw !important;
+        right: 0 !important;
+        bottom: 0 !important;
+    }
+}
+
