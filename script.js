@@ -1031,7 +1031,7 @@ const text1 = document.getElementById('text-1');
                 girlImage.alt = 'Cô gái ôm trái tim';
                 girlImage.decoding = 'async';
                 girlImage.loading = 'eager';
-                girlImage.src = 'waguri-full.png';
+                girlImage.src = 'waguri-full1.png';
                 waguriSmile.replaceWith(girlImage);
                 waguriSmile = girlImage;
             }
