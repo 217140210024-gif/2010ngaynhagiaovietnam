@@ -1030,9 +1030,12 @@ const text1 = document.getElementById('text-1');
             if (TINY_PERF.mobile) smileStage.classList.add('hien-thi');
             else smileStage.classList.add('hien-thi');
             if (waguriSmile) {
-                // iPhone Safari: keep Waguri's animation inline inside the page, never in the native fullscreen player.
-                waguriSmile.setAttribute('playsinline', '');
-                waguriSmile.setAttribute('webkit-playsinline', '');
+                // Mobile browsers (Android/iOS): keep Waguri inline instead of opening a native fullscreen player.
+                waguriSmile.setAttribute('playsinline', 'true');
+                waguriSmile.setAttribute('webkit-playsinline', 'true');
+                waguriSmile.setAttribute('x5-playsinline', 'true');
+                waguriSmile.setAttribute('x5-video-player-type', 'h5');
+                waguriSmile.setAttribute('x5-video-player-fullscreen', 'false');
                 waguriSmile.playsInline = true;
                 waguriSmile.muted = true;
                 waguriSmile.loop = true;
