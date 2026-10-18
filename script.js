@@ -1021,34 +1021,27 @@ const text1 = document.getElementById('text-1');
             text8.classList.remove('hien-thi');
             beautyStage.classList.remove('hien-thi');
             cloverStage.classList.remove('hien-thi');
-            // Keep the video invisible until the first decoded frame is actually available.
-            // The previous version faded the empty <video> layer before play() started,
-            // which made Waguri jump into view after decoding finished.
-            const waguriSmile = document.getElementById('waguri-smile-video');
+            // Use the repository's transparent PNG on every device instead of the video.
+            // This prevents native fullscreen playback, dark video backgrounds and decoder flicker.
+            let waguriSmile = document.getElementById('waguri-smile-video');
+            if (waguriSmile && waguriSmile.tagName.toLowerCase() === 'video') {
+                const girlImage = document.createElement('img');
+                girlImage.id = 'waguri-smile-video';
+                girlImage.className = waguriSmile.className;
+                girlImage.alt = 'Cô gái ôm trái tim';
+                girlImage.decoding = 'async';
+                girlImage.loading = 'eager';
+                girlImage.src = 'C%C3%B4%20g%C3%A1i%20%C3%B4m%20tr%C3%A1i%20tim%20d%E1%BB%8Bu%20d%C3%A0ng.png';
+                waguriSmile.replaceWith(girlImage);
+                waguriSmile = girlImage;
+            }
             const waguriRevealId = ++window.tinyWaguriRevealId || (window.tinyWaguriRevealId = 1);
             smileStage.classList.remove('waguri-frame-visible');
-            if (TINY_PERF.mobile) smileStage.classList.add('hien-thi');
-            else smileStage.classList.add('hien-thi');
+            smileStage.classList.add('hien-thi');
             if (waguriSmile) {
-                // Mobile browsers (Android/iOS): keep Waguri inline instead of opening a native fullscreen player.
-                waguriSmile.setAttribute('playsinline', 'true');
-                waguriSmile.setAttribute('webkit-playsinline', 'true');
-                waguriSmile.setAttribute('x5-playsinline', 'true');
-                waguriSmile.setAttribute('x5-video-player-type', 'h5');
-                waguriSmile.setAttribute('x5-video-player-fullscreen', 'false');
-                waguriSmile.playsInline = true;
-                // Avoid mobile browsers forcing a separate native video layer/fullscreen.
-                waguriSmile.removeAttribute('controls');
-                waguriSmile.setAttribute('disableRemotePlayback', '');
-                waguriSmile.setAttribute('preload', 'auto');
-                waguriSmile.setAttribute('autoplay', '');
-                waguriSmile.muted = true;
-                waguriSmile.loop = true;
-                waguriSmile.controls = false;
-                waguriSmile.disablePictureInPicture = true;
-                // The source has a very dark background; screen blending lets the page behind show through.
+                // The transparent PNG has no video layer to enter fullscreen or flash black.
                 waguriSmile.style.background = 'transparent';
-                waguriSmile.style.mixBlendMode = 'screen';
+                waguriSmile.style.mixBlendMode = 'normal';
                 const revealOnce = (() => {
                     let shown = false;
                     return () => {
@@ -1060,29 +1053,25 @@ const text1 = document.getElementById('text-1');
                         }));
                     };
                 })();
-                const playWaguri = () => {
-                    if (activeWish !== 'smile' || window.tinyWaguriRevealId !== waguriRevealId) return;
-                    // Real decoded frame callback avoids a black/transparent late pop.
-                    if (typeof waguriSmile.requestVideoFrameCallback === 'function') {
-                        try { waguriSmile.requestVideoFrameCallback(revealOnce); } catch (_) {}
-                    } else {
-                        // Older Safari/Chrome fallback: wait until playback advanced.
-                        const onTimeUpdate = () => {
-                            if (waguriSmile.readyState >= 2 && waguriSmile.currentTime > 0) {
-                                waguriSmile.removeEventListener('timeupdate',onTimeUpdate);
-                                revealOnce();
-                            }
-                        };
-                        waguriSmile.addEventListener('timeupdate',onTimeUpdate);
-                        waguriSmile.addEventListener('playing',() => {
-                            if (waguriSmile.readyState >= 2) requestAnimationFrame(revealOnce);
-                        },{once:true});
-                    }
-                    // Keep media initialization out of the scene's first render frame.
+                if (waguriSmile.tagName.toLowerCase() === 'img') {
+                    const revealImage = () => {
+                        if (waguriSmile.complete && waguriSmile.naturalWidth > 0) revealOnce();
+                    };
+                    waguriSmile.addEventListener('load', revealImage, {once:true});
+                    if (waguriSmile.complete) revealImage();
+                } else {
+                    // Defensive fallback if the markup changes back to a video later.
+                    waguriSmile.setAttribute('playsinline', 'true');
+                    waguriSmile.setAttribute('webkit-playsinline', 'true');
+                    waguriSmile.removeAttribute('controls');
+                    waguriSmile.muted = true;
+                    waguriSmile.loop = true;
+                    const revealVideo = () => {
+                        if (waguriSmile.readyState >= 2) revealOnce();
+                    };
+                    waguriSmile.addEventListener('loadeddata', revealVideo, {once:true});
                     waguriSmile.play().catch(() => {});
-                };
-                if (TINY_PERF.mobile) afterPaintIfCurrent('smile',playWaguri,65);
-                else playWaguri();
+                }
             }
             wishBackdrop.className = 'smile';
             khungMat.classList.remove('wish-beauty');
