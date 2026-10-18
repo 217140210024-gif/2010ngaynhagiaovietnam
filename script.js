@@ -1030,8 +1030,17 @@ const text1 = document.getElementById('text-1');
             if (TINY_PERF.mobile) smileStage.classList.add('hien-thi');
             else smileStage.classList.add('hien-thi');
             if (waguriSmile) {
+                // iPhone Safari: keep Waguri's animation inline inside the page, never in the native fullscreen player.
+                waguriSmile.setAttribute('playsinline', '');
+                waguriSmile.setAttribute('webkit-playsinline', '');
+                waguriSmile.playsInline = true;
                 waguriSmile.muted = true;
                 waguriSmile.loop = true;
+                waguriSmile.controls = false;
+                waguriSmile.disablePictureInPicture = true;
+                // The source has a very dark background; screen blending lets the page behind show through.
+                waguriSmile.style.background = 'transparent';
+                waguriSmile.style.mixBlendMode = 'screen';
                 const revealOnce = (() => {
                     let shown = false;
                     return () => {
